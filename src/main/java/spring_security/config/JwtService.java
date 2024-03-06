@@ -5,6 +5,10 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +21,9 @@ import java.util.function.Function;
 @Service
 public class JwtService {
     //https://generate-random.org/encryption-key-generator?count=1&bytes=32&cipher=aes-256-cbc&string=&password=
-    private final static String SECRET_KEY =
-            "fTbYssGRfzZdEXubE/2g46cV9dsuFN8peU/t1StWWkypDDPmCec3q8dh+qX/K6Pw";
+    @Value("${SECRET_KEY}")//data from application.properties
+    private String SECRET_KEY;
+
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
@@ -67,6 +72,7 @@ public class JwtService {
     }
 
     private Key getSignKey() {
+        System.out.println("_____" + SECRET_KEY);
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
     }
