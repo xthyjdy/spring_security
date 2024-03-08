@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import spring_security.token.TokenEntity;
 
 import java.util.Collection;
 import java.util.List;
@@ -26,8 +27,10 @@ public class UserEntity implements UserDetails {
     @Column(unique = true, nullable = false)
     private String email;
     private String password;
-    @Enumerated(EnumType.STRING)//require(!) for enum field only
+    @Enumerated(EnumType.STRING)//require(!) for enum fields only
     private UserRole role;
+    @OneToMany(mappedBy = "user")
+    private List<TokenEntity> tokens;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
